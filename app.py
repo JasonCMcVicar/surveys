@@ -7,3 +7,7 @@ app.config['SECRET_KEY'] = "never-tell!"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
+
+@app.get("/home")
+def generate_start_page():
+    return render_template("survey_start.html")
