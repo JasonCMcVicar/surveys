@@ -11,3 +11,5 @@ debug = DebugToolbarExtension(app)
 @app.get("/home")
 def generate_start_page():
     return render_template("survey_start.html")
+
+@app.get("/begin")
