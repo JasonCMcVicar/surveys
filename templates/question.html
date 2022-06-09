@@ -2,8 +2,8 @@
 {% block content %}
 
   <h1>{{ question.question }}</h1>
-
-  <form action="/answer" method="POST">
+  <!--{% if question_number == survey.questions.length %} else action="/questions/question"-->
+  <form  action="/answer"  method="POST">
 
       <!-- you should have one item like this for every choice -->
       <p>
@@ -16,5 +16,4 @@
 
     <button>Continue</button>
   </form>
-
 {% endblock %}
