@@ -25,9 +25,12 @@ def handle_post_request():
 
 @app.get("/questions/<question_number>")
 def generate_questions(question_number):
+    number = int(question_number) + 1
     return render_template(
         "question.html",
-        question = survey.questions[int(question_number)]) 
+        question = survey.questions[int(question_number)],
+        number= number) 
+
 
 
     
