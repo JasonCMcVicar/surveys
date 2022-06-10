@@ -7,8 +7,8 @@ app.config['SECRET_KEY'] = "never-tell!"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
-
 responses = []
+
 
 @app.get("/begin")
 def generate_start_page():
@@ -27,37 +27,44 @@ def handle_post_request_and_redirect():
         Redirects the user to the first question of the survey
 
     """
-    return redirect ('/questions/0')
+    session["responses"] = []
+    return redirect (f'/questions/{len(session["responses"])}')
 
 @app.get("/questions/<int:question_number>")
 def generate_question_page(question_number):
     """Generates Question Page
      Takes a number to generate the question at the index of survey's question list
      Returns the Question Template/Form
-    
-    """
 
-    return render_template(
+    """
+    print(len(responses))
+    if question_number != len(session['responses']):
+        return redirect (f'/questions/{len(session["responses"])}')
+    else:
+        return render_template(
         "question.html",
         question = survey.questions[question_number])
 
 @app.post('/answer')
 def handle_answers_and_redirect():
     """Adds the question answer to a list of responses and checks if the survey has any more questions
-        if the survey has more questions it will redirect the user to the next question. 
+        if the survey has more questions it will redirect the user to the next question.
         if there are no more questions it will redirect the user to the Thank You page.
 
     """
+    responses = session["responses"]
     responses.append(request.form["answer"])
+    session["responses"] = responses
     if len(responses) == len(survey.questions):
         print(responses)
         return redirect ("/thanks")
     else:
-        return redirect (f'/questions/{len(responses)}')
-    
+        return redirect (f'/questions/{len(session["responses"])}')
+
 @app.get('/thanks')
 def show_thanks():
-    """Displays Thank You Page 
-    
+    """Displays Thank You Page
+
     """
+    session["responses"] = []
     return render_template("completion.html")
