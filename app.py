@@ -8,7 +8,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 debug = DebugToolbarExtension(app)
 
-responses =[]
+responses = []
 
 @app.get("/begin")
 def generate_start_page():
@@ -29,19 +29,17 @@ def handle_post_request_and_redirect():
     """
     return redirect ('/questions/0')
 
-@app.get("/questions/<question_number>")
+@app.get("/questions/<int:question_number>")
 def generate_question_page(question_number):
     """Generates Question Page
      Takes a number to generate the question at the index of survey's question list
      Returns the Question Template/Form
     
     """
-    global next_question
-    next_question = int(question_number) + 1
 
     return render_template(
         "question.html",
-        question = survey.questions[int(question_number)])
+        question = survey.questions[question_number])
 
 @app.post('/answer')
 def handle_answers_and_redirect():
@@ -51,9 +49,15 @@ def handle_answers_and_redirect():
 
     """
     responses.append(request.form["answer"])
-    if next_question == len(survey.questions):
+    if len(responses) == len(survey.questions):
         print(responses)
-        return render_template("completion.html")
+        return redirect ("/thanks")
     else:
-        return redirect (f'/questions/{next_question}')
+        return redirect (f'/questions/{len(responses)}')
     
+@app.get('/thanks')
+def show_thanks():
+    """Displays Thank You Page 
+    
+    """
+    return render_template("completion.html")
